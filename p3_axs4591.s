@@ -100,17 +100,18 @@ maxDone:
     MOV R1, R9
     MOV R2, R8
     BL _printResults            @ branch to procedure _getSum to find sum
+    
+startSearch:
+    BL searchInput
+    BL _scanf
+    MOV R11, R0
     MOV R0, #0		    @ initialize index variable R0 with 0, i = 0
     LDR R1, =a      	    @ get the address of array a
     LSL R2, R0, #2	    @ multiply index*4 to get array offset
     ADD R2, R1, R2	    @ R2 now has the element address
     LDR R8, [R2]	    @ store the first element in R8
     ADD R0, R0, #1	    @ increment index, i=i+1;
-    @B  search	            @ branch to procedure _getMin to find minimum
-    
-startSearch:
-    BL _scanf
-    MOV R11, R0
+    B  search	            @ branch to procedure _getMin to find minimum
 search:
     CMP R0, #10             @ check to see if we are done iterating
     BEQ searchDone		    @ branch to procedure minDone when minimum is found
@@ -167,6 +168,12 @@ printSearch:
     LDR R0, =print_search     @ R0 contains formatted string address
     BL printf               @ call printf
     POP {PC}                @ restore the stack pointer and return
+
+searchInput:
+    PUSH {LR}               @ store the return address
+    LDR R0, =input_str     @ R0 contains formatted string address
+    BL printf               @ call printf
+    POP {PC}                @ restore the stack pointer and return
     
 _scanf:
     PUSH {LR}               @ store LR since scanf call overwrites
@@ -182,8 +189,9 @@ _scanf:
 .balign 4
 a:              .skip       400
 printf_str:     .asciz      "a[%d] = %d\n"
-format_str:     .asciz      "Enter Search Value: %d"
+format_str:     .asciz      "%d"
 print_search:   .asciz      "%d"
+input_str:      .asciz      "Enter Search Value: "     
 debug_str:
 .asciz "R%-2d   0x%08X  %011d \n"
 results: 	.asciz    "Minimum = %d\nMaximum = %d\n"

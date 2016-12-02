@@ -48,8 +48,6 @@ _readloop:
     ADD R0, R0, #1          @ increment index
     B   _readloop            @ branch to next loop iteration
 _readdone:
-    BL _scanf
-    MOV R11, R0
     MOV R0, #0		    @ initialize index variable R0 with 0, i = 0
     LDR R1, =a      	    @ get the address of array a
     LSL R2, R0, #2	    @ multiply index*4 to get array offset
@@ -72,8 +70,6 @@ _getMin:
     LSL R2, R0, #2          @ multiply index*4 to get array offset
     ADD R2, R1, R2          @ R2 now has the element address
     LDR R1, [R2]            @ read the array at address
-    CMP R11, R8
-    MOVEQ R3, R0
     CMP R1, R8              @ compare R1 with R8
     MOVLT R8, R1	    @ move R1 to R8 if it is smaller than R8
     ADD R0, R0, #1          @ increment index
@@ -104,6 +100,35 @@ maxDone:
     MOV R1, R9
     MOV R2, R8
     BL _printResults            @ branch to procedure _getSum to find sum
+    MOV R0, #0		    @ initialize index variable R0 with 0, i = 0
+    LDR R1, =a      	    @ get the address of array a
+    LSL R2, R0, #2	    @ multiply index*4 to get array offset
+    ADD R2, R1, R2	    @ R2 now has the element address
+    LDR R8, [R2]	    @ store the first element in R8
+    ADD R0, R0, #1	    @ increment index, i=i+1;
+    B  search	            @ branch to procedure _getMin to find minimum
+    
+startSearch:
+    BL _scanf
+    MOV R11, R0
+search:
+    CMP R0, #10             @ check to see if we are done iterating
+    BEQ searchDone		    @ branch to procedure minDone when minimum is found
+    LDR R1, =a              @ get address of a
+    LSL R2, R0, #2          @ multiply index*4 to get array offset
+    ADD R2, R1, R2          @ R2 now has the element address
+    LDR R1, [R2]            @ read the array at address
+    CMP R11, R8
+    MOVEQ R11, R0
+    CMP R1, R8              @ compare R1 with R8
+    MOVLT R8, R1	    @ move R1 to R8 if it is smaller than R8
+    ADD R0, R0, #1          @ increment index
+    B  _getMin              @ branch to next loop iteration
+searchDone:
+    MOV R1, R11
+    BL printSearch
+    B startSearch
+
 _getrand:
     PUSH {LR}               @ backup return address
     BL rand                 @ get a random number
@@ -111,15 +136,6 @@ _getrand:
     MOV R2, #1000
     BL _mod_unsigned
     POP {PC}                @ return 
-
-_exit:  
-    MOV R7, #4              @ write syscall, 4
-    MOV R0, #1              @ output stream to monitor, 1
-    MOV R2, #21             @ print string length
-    LDR R1, =exit_str       @ string at label exit_str:
-    SWI 0                   @ execute syscall
-    MOV R7, #1              @ terminate syscall, 1
-    SWI 0                   @ execute syscall
    
 _mod_unsigned:
     cmp R2, R1          @ check to see if R1 >= R2

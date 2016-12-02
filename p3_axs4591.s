@@ -132,6 +132,11 @@ _mod_unsigned:
     MOV R0, R1          @ move remainder to R0
     MOV PC, LR          @ return   
 
+_printResults:
+    PUSH {LR}               @ store LR since printf call overwrites
+    LDR R0, =results        @ R0 contains formatted string address
+    BL printf               @ call printf
+    POP {PC}                @ return
 _printf:
     PUSH {LR}               @ store the return address
     LDR R0, =printf_str     @ R0 contains formatted string address
@@ -144,5 +149,5 @@ a:              .skip       400
 printf_str:     .asciz      "a[%d] = %d\n"
 debug_str:
 .asciz "R%-2d   0x%08X  %011d \n"
-results: 	.ascii    "Minimum = %d\nMaximum = %d\n"
-exit_str:       .ascii      "Terminating program.\n"
+results: 	.asciz    "Minimum = %d\nMaximum = %d\n"
+exit_str:       .asciz      "Terminating program.\n"

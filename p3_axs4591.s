@@ -48,7 +48,13 @@ _readloop:
     ADD R0, R0, #1          @ increment index
     B   _readloop            @ branch to next loop iteration
 _readdone:
-    B _exit                 @ exit if done
+    MOV R0, #0		    @ initialize index variable R0 with 0, i = 0
+    LDR R1, =a      	    @ get the address of array a
+    LSL R2, R0, #2	    @ multiply index*4 to get array offset
+    ADD R2, R1, R2	    @ R2 now has the element address
+    LDR R8, [R2]	    @ store the first element in R8
+    ADD R0, R0, #1	    @ increment index, i=i+1;
+    B  _getMin	            @ branch to procedure _getMin to find minimum
 _seedrand:
     PUSH {LR}               @ backup return address
     MOV R0, #0              @ pass 0 as argument to time call

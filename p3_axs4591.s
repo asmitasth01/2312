@@ -121,6 +121,7 @@ search:
     LDR R1, [R2]            @ read the array at address
     CMP R11, R1
     MOVEQ R3, R0
+    MOVEQ R3, #-1
     ADD R0, R0, #1          @ increment index
     B  search              @ branch to next loop iteration
 searchDone:
@@ -190,7 +191,7 @@ _scanf:
 a:              .skip       400
 printf_str:     .asciz      "a[%d] = %d\n"
 format_str:     .asciz      "%d"
-print_search:   .asciz      "%d"
+print_search:   .asciz      "%d\n"
 input_str:      .asciz      "Enter Search Value: "     
 debug_str:
 .asciz "R%-2d   0x%08X  %011d \n"

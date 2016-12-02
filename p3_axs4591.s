@@ -106,7 +106,7 @@ maxDone:
     ADD R2, R1, R2	    @ R2 now has the element address
     LDR R8, [R2]	    @ store the first element in R8
     ADD R0, R0, #1	    @ increment index, i=i+1;
-    B  search	            @ branch to procedure _getMin to find minimum
+    @B  search	            @ branch to procedure _getMin to find minimum
     
 startSearch:
     BL _scanf
@@ -120,10 +120,8 @@ search:
     LDR R1, [R2]            @ read the array at address
     CMP R11, R8
     MOVEQ R11, R0
-    CMP R1, R8              @ compare R1 with R8
-    MOVLT R8, R1	    @ move R1 to R8 if it is smaller than R8
     ADD R0, R0, #1          @ increment index
-    B  _getMin              @ branch to next loop iteration
+    B  search              @ branch to next loop iteration
 searchDone:
     MOV R1, R11
     BL printSearch

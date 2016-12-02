@@ -28,8 +28,27 @@ _writeloop:
     
 _writedone:
     MOV R0, #0              @ initialze index variable
+   
+_readloop:
+    CMP R0, #10            @ check to see if we are done iterating
+    BEQ _readdone            @ exit loop if done
+    LDR R1, =a              @ get address of a
+    LSL R2, R0, #2          @ multiply index*4 to get array offset
+    ADD R2, R1, R2          @ R2 now has the element address
+    LDR R1, [R2]            @ read the array at address 
+    PUSH {R0}               @ backup register before printf
+    PUSH {R1}               @ backup register before printf
+    PUSH {R2}               @ backup register before printf
+    MOV R2, R1              @ move array value to R2 for printf
+    MOV R1, R0              @ move array index to R1 for printf
+    BL  _printf             @ branch to print procedure with return
+    POP {R2}                @ restore register
+    POP {R1}                @ restore register
+    POP {R0}                @ restore register
+    ADD R0, R0, #1          @ increment index
+    B   _readloop            @ branch to next loop iteration
+_readdone:
     B _exit                 @ exit if done
-
 _seedrand:
     PUSH {LR}               @ backup return address
     MOV R0, #0              @ pass 0 as argument to time call
@@ -78,5 +97,9 @@ _printf:
     POP {PC}                @ restore the stack pointer and return
    
 .data
-printf_str:     .asciz      "A random number: %d\n"
+.balign 4
+a:              .skip       400
+printf_str:     .asciz      "a[%d] = %d\n"
+debug_str:
+.asciz "R%-2d   0x%08X  %011d \n"
 exit_str:       .ascii      "Terminating program.\n"

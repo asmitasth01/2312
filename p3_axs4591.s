@@ -82,8 +82,7 @@ minDone:
     ADD R2, R1, R2	    @ R2 now has the element address
     LDR R9, [R2]	    @ store the first element in R9
     ADD R0, R0, #1	    @ increment index
-    MOV R1, R0
-    @B  _getMax	            @ branch to procedure _getMax to find maximum
+    B  _getMax	            @ branch to procedure _getMax to find maximum
     
 _getMax:
     CMP R0, #10             @ check to see if we are done iterating

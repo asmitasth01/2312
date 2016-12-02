@@ -120,8 +120,9 @@ search:
     LSL R2, R0, #2          @ multiply index*4 to get array offset
     ADD R2, R1, R2          @ R2 now has the element address
     LDR R1, [R2]            @ read the array at address
-    CMP R11, R1
+    CMP R11, R8
     MOVEQ R3, R0
+    MOV R8, R1
     ADD R0, R0, #1          @ increment index
     B  search              @ branch to next loop iteration
 searchDone:

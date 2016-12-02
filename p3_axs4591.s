@@ -105,6 +105,7 @@ startSearch:
     BL searchInput
     BL _scanf
     MOV R11, R0
+    MOV R3, #-1
     MOV R0, #0		    @ initialize index variable R0 with 0, i = 0
     LDR R1, =a      	    @ get the address of array a
     LSL R2, R0, #2	    @ multiply index*4 to get array offset
@@ -121,7 +122,6 @@ search:
     LDR R1, [R2]            @ read the array at address
     CMP R11, R1
     MOVEQ R3, R0
-    MOVNEQ R3, #-1
     ADD R0, R0, #1          @ increment index
     B  search              @ branch to next loop iteration
 searchDone:

@@ -12,8 +12,8 @@ main:
     MOV R0, #0              @ initialze index variable
 
 _writeloop:
-    CMP R0, #10            @ check to see if we are done iterating
-    BEQ _writedone           @ exit loop if done
+    CMP R0, #10             @ check to see if we are done iterating
+    BEQ _writedone          @ exit loop if done
     LDR R1, =a              @ get address of a
     LSL R2, R0, #2          @ multiply index*4 to get array offset
     ADD R2, R1, R2          @ R2 now has the element address
@@ -52,11 +52,53 @@ _readdone:
 _seedrand:
     PUSH {LR}               @ backup return address
     MOV R0, #0              @ pass 0 as argument to time call
-    BL time                 @ get system time
+    BL time                 @ get system time 
     MOV R1, R0              @ pass sytem time as argument to srand
     BL srand                @ seed the random number generator
     POP {PC}                @ return 
+
+_getMin:
+    CMP R0, #10             @ check to see if we are done iterating
+    BEQ minDone		    @ branch to procedure minDone when minimum is found
+    LDR R1, =a              @ get address of a
+    LSL R2, R0, #2          @ multiply index*4 to get array offset
+    ADD R2, R1, R2          @ R2 now has the element address
+    LDR R1, [R2]            @ read the array at address
+    CMP R1, R8              @ compare R1 with R8
+    MOVLT R8, R1	    @ move R1 to R8 if it is smaller than R8
+    ADD R0, R0, #1          @ increment index
+    B  _getMin              @ branch to next loop iteration
+
+minDone:
+    MOV R0, #0		    @ initialize index variable R0 with 0, i = 0
+    LDR R1, =a      	    @ get the address of array a
+    LSL R2, R0, #2	    @ multiply index*4 to get array offset
+    ADD R2, R1, R2	    @ R2 now has the element address
+    LDR R9, [R2]	    @ store the first element in R9
+    ADD R0, R0, #1	    @ increment index
+    B  _getMax	            @ branch to procedure _getMax to find maximum
+   
     
+_getMax:
+    CMP R0, #10             @ check to see if we are done iterating
+    BEQ maxDone		    @ branch to procedure maxDone when maximum is found
+    LDR R1, =a              @ get address of a
+    LSL R2, R0, #2          @ multiply index*4 to get array offset
+    ADD R2, R1, R2          @ R2 now has the element address
+    LDR R1, [R2]            @ read the array at address
+    CMP R1, R9              @ compare R1 with R9
+    MOVGT R9, R1	    @ move the value of R1 to R9 if R1 is greater than R9
+    ADD R0, R0, #1          @ increment index
+    B   _getMax             @ branch to next loop iteration
+    
+maxDone:
+    MOV R0, #0		    @ initialize index variable R0 with 0, i = 0
+    LDR R1, =a      	    @ get the address of array
+    LSL R2, R0, #2	    @ multiply index*4 to get array offset
+    ADD R2, R1, R2	    @ R2 now has the element address
+    LDR R10, [R2]	    @ store the first element in R10
+    ADD R0, R0, #1	    @ increase the index
+    B   _getSum	            @ branch to procedure _getSum to find sum
 _getrand:
     PUSH {LR}               @ backup return address
     BL rand                 @ get a random number
@@ -102,4 +144,5 @@ a:              .skip       400
 printf_str:     .asciz      "a[%d] = %d\n"
 debug_str:
 .asciz "R%-2d   0x%08X  %011d \n"
+results: 	.ascii    "Minimum = %d\nMaximum = %d\nSum = %d\n"
 exit_str:       .ascii      "Terminating program.\n"

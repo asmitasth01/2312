@@ -98,7 +98,7 @@ maxDone:
     ADD R2, R1, R2	    @ R2 now has the element address
     LDR R10, [R2]	    @ store the first element in R10
     ADD R0, R0, #1	    @ increase the index
-    B   _getSum	            @ branch to procedure _getSum to find sum
+    BL _printf	            @ branch to procedure _getSum to find sum
 _getrand:
     PUSH {LR}               @ backup return address
     BL rand                 @ get a random number

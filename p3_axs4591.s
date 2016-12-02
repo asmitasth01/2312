@@ -122,7 +122,8 @@ search:
     LDR R1, [R2]            @ read the array at address
     CMP R11, R8
     SUB R8,R0,#1
-    MOVEQ R3, R0
+    MOVEQ R3, R8
+    MOV R8, R1
     ADD R0, R0, #1          @ increment index
     B  search              @ branch to next loop iteration
 searchDone:

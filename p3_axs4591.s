@@ -114,7 +114,7 @@ startSearch:
     ADD R0, R0, #1	    @ increment index, i=i+1;
     B  search	            @ branch to procedure _getMin to find minimum
 search:
-    CMP R0, #10             @ check to see if we are done iterating
+    CMP R0, #11             @ check to see if we are done iterating
     BEQ searchDone		    @ branch to procedure minDone when minimum is found
     LDR R1, =a              @ get address of a
     LSL R2, R0, #2          @ multiply index*4 to get array offset

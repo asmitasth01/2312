@@ -48,6 +48,8 @@ _readloop:
     ADD R0, R0, #1          @ increment index
     B   _readloop            @ branch to next loop iteration
 _readdone:
+    BL _scanf
+    MOV R11, R0
     MOV R0, #0		    @ initialize index variable R0 with 0, i = 0
     LDR R1, =a      	    @ get the address of array a
     LSL R2, R0, #2	    @ multiply index*4 to get array offset
@@ -70,6 +72,8 @@ _getMin:
     LSL R2, R0, #2          @ multiply index*4 to get array offset
     ADD R2, R1, R2          @ R2 now has the element address
     LDR R1, [R2]            @ read the array at address
+    CMP R11, R8
+    MOVEQ R3, R0
     CMP R1, R8              @ compare R1 with R8
     MOVLT R8, R1	    @ move R1 to R8 if it is smaller than R8
     ADD R0, R0, #1          @ increment index
@@ -143,12 +147,29 @@ _printf:
     LDR R0, =printf_str     @ R0 contains formatted string address
     BL printf               @ call printf
     POP {PC}                @ restore the stack pointer and return
+    
+printSearch:
+    PUSH {LR}               @ store the return address
+    LDR R0, =print_search     @ R0 contains formatted string address
+    BL printf               @ call printf
+    POP {PC}                @ restore the stack pointer and return
+    
+_scanf:
+    PUSH {LR}               @ store LR since scanf call overwrites
+    SUB SP, SP, #4          @ make room on stack
+    LDR R0, =format_str     @ R0 contains address of format string
+    MOV R1, SP              @ move SP to R1 to store entry on stack
+    BL scanf                @ call scanf
+    LDR R0, [SP]            @ load value at SP into R0
+    ADD SP, SP, #4          @ restore the stack pointer
+    POP {PC}
    
 .data
 .balign 4
 a:              .skip       400
 printf_str:     .asciz      "a[%d] = %d\n"
+format_str:     .asciz      "Enter Search Value: %d"
+print_search:   .asciz      "%d"
 debug_str:
 .asciz "R%-2d   0x%08X  %011d \n"
 results: 	.asciz    "Minimum = %d\nMaximum = %d\n"
-exit_str:       .asciz      "Terminating program.\n"

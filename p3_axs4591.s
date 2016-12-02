@@ -94,7 +94,7 @@ _getMax:
 maxDone:
     MOV R1, R9
     MOV R2, R8
-    BL printResults            @ branch to procedure _getSum to find sum
+    BL _printResults            @ branch to procedure _getSum to find sum
 _getrand:
     PUSH {LR}               @ backup return address
     BL rand                 @ get a random number

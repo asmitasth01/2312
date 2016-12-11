@@ -17,6 +17,8 @@ main:
 	 // VMOV S1, R0             @ move return value R0 to FPU register S1
       MOV R2, R5              @move R5 to R2
 	  //VCVT.F64.F32 D1, S0     @ covert the result to double precision for printing
+	  BL _compare
+	  B main
 
 _scanf:
     PUSH {LR}               @ store LR since scanf call overwrites
@@ -56,7 +58,7 @@ _ABS:
     VCVT.F64.F32 D4, S1     @ covert the result to double precision for printing
     VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
      BL  _printf_result      @ print the result
-	
+	B main
 
 
 _printf_result:
@@ -69,5 +71,6 @@ _printf_result:
 format_str: 	.asciz	    "%f"
 read_char:      .ascii      " "
 result_str:	.asciz	   "%f \n"
+
 
 

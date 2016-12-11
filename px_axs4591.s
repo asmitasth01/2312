@@ -13,10 +13,10 @@ main:
 	  VMOV S0, R0             @ move return value R0 to FPU register S0
 	  BL _getchar			  @ branch to scanf procedure with return
 	  MOV R5, R0              @move R0 to R5
-	  BL  _scanf              @ branch to scanf procedure with return
-	  VMOV S1, R0             @ move return value R0 to FPU register S1
+	 // BL  _scanf              @ branch to scanf procedure with return
+	 // VMOV S1, R0             @ move return value R0 to FPU register S1
       MOV R2, R5              @move R5 to R2
-	  VCVT.F64.F32 D1, S0     @ covert the result to double precision for printing
+	  //VCVT.F64.F32 D1, S0     @ covert the result to double precision for printing
 
 _scanf:
     PUSH {LR}               @ store LR since scanf call overwrites
@@ -49,3 +49,30 @@ _compare:
     CMP R2, #'i'            @ compare against the constant char '@'
     BLEQ _INVERSE            	@ branch to equal handler
     MOV PC, R4
+   
+_ABS:
+    VABS.F32 S1, S0     @ compute S2 = S0 * S1
+    
+    VCVT.F64.F32 D4, S1     @ covert the result to double precision for printing
+    VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
+     BL  _printf_result      @ print the result
+	
+_exit:  
+    MOV R7, #4              @ write syscall, 4
+    MOV R0, #1              @ output stream to monitor, 1
+    MOV R2, #21             @ print string length
+    LDR R1, =exit_str       @ string at label exit_str:
+    SWI 0                   @ execute syscall
+    MOV R7, #1              @ terminate syscall, 1
+    SWI 0                   @ execute syscall
+
+_printf_result:
+    PUSH {LR}               @ push LR to stack
+    LDR R0, =result_str     @ R0 contains formatted string address
+    BL printf               @ call printf
+    POP {PC}                @ pop LR from stack and return
+    
+.data
+format_str 	.asciz	    "%f"
+prompt_str	.asciz	
+

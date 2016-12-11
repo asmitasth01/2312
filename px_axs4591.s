@@ -44,8 +44,8 @@ _compare:
 	MOV R4, LR
     CMP R2, #'a'            @ compare against the constant char '@'
     BLEQ _ABS           	@ branch to equal handler
-   // CMP R2, #'s'            @ compare against the constant char '@'
-   // BLEQ _SQUARE_ROOT            	@ branch to equal handler
+    CMP R2, #'s'            @ compare against the constant char '@'
+   BLEQ _SQUARE_ROOT            	@ branch to equal handler
     //CMP R2, #'p'            @ compare against the constant char '@'
     //BLEQ _POW           	@ branch to equal handler
     //CMP R2, #'i'            @ compare against the constant char '@'
@@ -58,8 +58,15 @@ _ABS:
     VCVT.F64.F32 D4, S1     @ covert the result to double precision for printing
     VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
      BL  _printf_result      @ print the result
-	B main
+   B main
 
+_SQUARE_ROOT:
+   
+   VSQRT.F32 S1, S0     @ compute S2 = S0 * S1
+    VCVT.F64.F32 D4, S1     @ covert the result to double precision for printing
+    VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
+     BL  _printf_result      @ print the result
+     B main
 
 _printf_result:
     PUSH {LR}               @ push LR to stack

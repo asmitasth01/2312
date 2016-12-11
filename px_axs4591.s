@@ -71,8 +71,8 @@ _SQUARE_ROOT:
 _INVERSE:
     MOV R6, #1
     VMOV S1, R6
-    VCVT.F32.U32 S0, S0     @ convert unsigned bit representation to single float
     VCVT.F32.U32 S1, S1     @ convert unsigned bit representation to single float
+    //VCVT.F32.U32 S1, S1     @ convert unsigned bit representation to single float
 	
     VDIV.F32 S2, S1, S0     @ compute S2 = S0 * S1
     

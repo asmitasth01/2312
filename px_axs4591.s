@@ -67,6 +67,19 @@ _SQUARE_ROOT:
     VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
      BL  _printf_result      @ print the result
      B main
+     
+_INVERSE:
+    MOV R6, #1
+    VMOV S1, R6
+    VCVT.F32.U32 S0, S0     @ convert unsigned bit representation to single float
+    VCVT.F32.U32 S1, S1     @ convert unsigned bit representation to single float
+	
+    VDIV.F32 S2, S1, S0     @ compute S2 = S0 * S1
+    
+    VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
+    VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
+    BL  _printf_result      @ print the result
+    B  main
 
 _printf_result:
     PUSH {LR}               @ push LR to stack

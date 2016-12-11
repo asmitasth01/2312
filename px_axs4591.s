@@ -67,6 +67,7 @@ _printf_result:
     
 .data
 format_str: 	.asciz	    "%f"
+read_char:      .ascii      " "
 result_str:	.asciz	   "%f \n"
 
 

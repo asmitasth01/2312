@@ -86,14 +86,14 @@ _POW:
 	VCVT.F32.U32 S1, S1     @ convert unsigned bit representation to single float
 	CMP R0, R3
 	BEQ _POWER_DONE
-	VMUL.F32 S2, S0, #4     @ compute S2 = S0 * S0
+	VMUL.F32 S2, S0, S0     @ compute S2 = S0 * S0
         VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
         VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
-        
+        BL  _printf_result      @ print the result
 	ADD R0, R0, #1          @ increment index
 	@VADD.F32 S3, S3,#1
-        B _POW           @ branch to next loop iteration
-	BL  _printf_result      @ print the result
+        @B _POW           @ branch to next loop iteration
+	@BL  _printf_result      @ print the result
          B main
 _POWER_DONE:
 	MOV R0, #0

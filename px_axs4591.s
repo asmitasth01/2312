@@ -79,12 +79,14 @@ _INVERSE:
 _POW:
 	BL  _scanf              @ branch to scanf procedure with return
 	VMOV S1, R0             @ move return value R0 to FPU register S1
-    	CMP R0, #S1
+	@MOV R8, R0
+	CMP R0, #S1
 	BEQ _POWER_DONE
-	VMUL.F32 S2, S0, S0     @ compute S2 = S0 * S1
+	VMUL.F32 S2, S0, S0     @ compute S2 = S0 * S0
         VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
         VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
-	B _POW
+       ADD R0, R0, #1          @ increment index
+        B _POW           @ branch to next loop iteration
 	BL  _printf_result      @ print the result
          B main
 _POWER_DONE:

@@ -81,7 +81,7 @@ _POW:
 	VMOV S1, R0             @ move return value R0 to FPU register S1
 	@MOV R8, R0
 	VCVT.F32.U32 S1, S1     @ convert unsigned bit representation to single float
-	CMP R0, S1
+	CMP R0, #S1
 	BEQ _POWER_DONE
 	VMUL.F32 S2, S0, S0     @ compute S2 = S0 * S0
         VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing

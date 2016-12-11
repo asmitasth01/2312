@@ -48,8 +48,8 @@ _compare:
    BLEQ _SQUARE_ROOT            	@ branch to equal handler
     //CMP R2, #'p'            @ compare against the constant char '@'
     //BLEQ _POW           	@ branch to equal handler
-    //CMP R2, #'i'            @ compare against the constant char '@'
-    //BLEQ _INVERSE            	@ branch to equal handler
+    CMP R2, #'i'            @ compare against the constant char '@'
+    BLEQ _INVERSE            	@ branch to equal handler
     MOV PC, R4
    
 _ABS:
@@ -72,8 +72,7 @@ _INVERSE:
     MOV R6, #1
     VMOV S1, R6
     VCVT.F32.U32 S1, S1     @ convert unsigned bit representation to single float
-    //VCVT.F32.U32 S1, S1     @ convert unsigned bit representation to single float
-   VDIV.F32 S2, S0, S1     @ compute S2 = S0 * S1
+   VDIV.F32 S2, S1, S0     @ compute S2 = S1/S0
     VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
     VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
      BL  _printf_result      @ print the result

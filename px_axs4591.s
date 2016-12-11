@@ -73,7 +73,7 @@ _printf_result:
     POP {PC}                @ pop LR from stack and return
     
 .data
+format_str: 	.asciz	    "%f"
 result_str:	.asciz	   "%f \n"
-format_str 	.asciz	    "%f"
-prompt_str	.asciz	
+
 

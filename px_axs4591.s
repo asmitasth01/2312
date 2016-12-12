@@ -77,11 +77,11 @@ _INVERSE:
      B main
     
 _beforePOW:
-	BL  _scanf              @ branch to scanf procedure with return
-	MOV R3, R0             @ move return value R0 to FPU register S1
-	SUB R3, R3, #1
-	MOV R0, #0              @ initialze index variable
-	VMOV.F32 S1, S0
+	@BL  _scanf              @ branch to scanf procedure with return
+	@MOV R3, R0             @ move return value R0 to FPU register S1
+	@SUB R3, R3, #1
+	@MOV R0, #0              @ initialze index variable
+	@VMOV.F32 S1, S0
 	
 _POW:
 	@CMP R0, R3

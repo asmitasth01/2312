@@ -80,21 +80,18 @@ _beforePOW:
 	VMOV.F32 S1, S0
 	VMOV.F32 S2, S1
 	BL  _scanf              @ branch to scanf procedure with return
-	MOV R3, R0             @ move return value R0 to FPU register S1
-	VMOV S4, R3
-	SUB R3, R3, #1
+	MOV R10, R0             @ move return value R0 to FPU register S1
+	VMOV S4, R10
+	SUB R10, R10, #1
 	MOV R0, #0              @ initialze index variable
 	
 	
 _startPOW:
-	CMP R0, R3
+	CMP R0, R10
 	@MOV R1, #2
 	@VMOV S1, R1
 	BEQ _POWER_DONE
 	VMUL.F32 S2, S1, S2     @ compute S2 = S1 * S2
-	VCVT.F64.F32 D3, S2     @ covert the result to double precision for printing
-        VMOV R1, R2, D3         @ split the double VFP register into two ARM registers
-	BL  _printf_result      @ print the result
 	@VMUL.F32 S2, S1, S2     @ compute S2 = S1 * S2
 	@VMUL.F32 S2, S1, S2     @ compute S2 = S1 * S2
         @VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
@@ -104,7 +101,7 @@ _startPOW:
 	 
 _POWER_DONE:
 	@MOV R9, #0
-	 VCVT.F64.F32 D3, S4     @ covert the result to double precision for printing
+	 VCVT.F64.F32 D3, S2     @ covert the result to double precision for printing
         VMOV R1, R2, D3         @ split the double VFP register into two ARM registers
 	BL  _printf_result      @ print the result
          B main

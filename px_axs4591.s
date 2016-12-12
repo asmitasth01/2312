@@ -91,6 +91,8 @@ _POW:
 	@VMOV S1, R1
 	@BEQ _POWER_DONE
 	VMUL.F32 S2, S1, S2     @ compute S2 = S1 * S2
+	VMUL.F32 S2, S1, S2     @ compute S2 = S1 * S2
+	VMUL.F32 S2, S1, S2     @ compute S2 = S1 * S2
         @VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
         @VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
 	@ADD R0, R0, #1          @ increment index

@@ -80,14 +80,15 @@ _beforePOW:
 	VMOV.F32 S1, S0
 	VMOV.F32 S2, S1
 	BL  _scanf              @ branch to scanf procedure with return
-	MOV R10, R0             @ move return value R0 to FPU register S1
+	VMOV S4, R0             @ move return value R0 to FPU register S1
+	VCVT.U32 R10,S4   @ covert the result to double precision for printing
 	@VMOV S4, R10
 	@SUB R10, R10, #1
 	MOV R0, #1              @ initialze index variable
 	
 	
 _startPOW:
-	CMP R0, #4
+	CMP R0, R10
 	@MOV R1, #2
 	@VMOV S1, R1
 	BEQ _POWER_DONE

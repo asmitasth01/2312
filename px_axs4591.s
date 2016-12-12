@@ -97,7 +97,7 @@ _startPOW:
         @VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
         @VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
 	ADD R0, R0, #1          @ increment index
-        B _startPOW           @ branch to next loop iteration
+        @B _startPOW           @ branch to next loop iteration
 	 
 _POWER_DONE:
 	@MOV R9, #0

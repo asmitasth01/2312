@@ -45,7 +45,7 @@ _compare:
     CMP R2, #'s'            @ compare against the constant char '@'
    BLEQ _SQUARE_ROOT            	@ branch to equal handler
     CMP R2, #'p'            @ compare against the constant char '@'
-   BLEQ _POW           	@ branch to equal handler
+   BLEQ _beforePOW           	@ branch to equal handler
     CMP R2, #'i'            @ compare against the constant char '@'
     BLEQ _INVERSE            	@ branch to equal handler
     MOV PC, R4
@@ -76,23 +76,30 @@ _INVERSE:
      BL  _printf_result      @ print the result
      B main
     
-_POW:
+_beforePOW:
 	BL  _scanf              @ branch to scanf procedure with return
 	MOV R3, R0             @ move return value R0 to FPU register S1
-	MOV R0, #0              @ initialze index variable
+	SUB R3, R3, #1
+	MOV R0, #1              @ initialze index variable
+	VMOV S1, S0
+	
+_POW:
 	CMP R0, R3
 	@MOV R1, #2
 	@VMOV S1, R1
 	BEQ _POWER_DONE
-	VMUL.F32 S2, S0, S1     @ compute S2 = S0 * S0
-        VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
-        VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
+	VMUL.F32 S1, S0, S1     @ compute S1 = S0 * S1
+        @VCVT.F64.F32 D4, S2     @ covert the result to double precision for printing
+        @VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
 	ADD R0, R0, #1          @ increment index
         BL _POW           @ branch to next loop iteration
-	 BL  _printf_result      @ print the result
-         B main
+	 
 _POWER_DONE:
-	MOV R9, #0
+	@MOV R9, #0
+	 VCVT.F64.F32 D4, S1     @ covert the result to double precision for printing
+        VMOV R1, R2, D4         @ split the double VFP register into two ARM registers
+	BL  _printf_result      @ print the result
+         B main
 
 _printf_result:
     PUSH {LR}               @ push LR to stack

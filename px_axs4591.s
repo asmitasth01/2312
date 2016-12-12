@@ -28,6 +28,16 @@ _scanf:
     ADD SP, SP, #4          @ restore the stack pointer
     POP {PC}                @ return
 
+_scanfINT:
+    PUSH {LR}               @ store LR since scanf call overwrites
+    SUB SP, SP, #4          @ make room on stack
+    LDR R0, =format_strINT     @ R0 contains address of format string
+    MOV R1, SP              @ move SP to R1 to store entry on stack
+    BL scanf                @ call scanf
+    LDR R0, [SP]            @ load value at SP into R0
+    ADD SP, SP, #4          @ restore the stack pointer
+    POP {PC}                @ return
+    
 _getchar:
 	MOV R7, #3              @ write syscall, 3
     MOV R0, #0              @ input stream from monitor, 0
@@ -79,9 +89,9 @@ _INVERSE:
 _beforePOW:
 	VMOV.F32 S1, S0
 	VMOV.F32 S2, S1
-	BL  _scanf              @ branch to scanf procedure with return
-	VMOV S4, R0             @ move return value R0 to FPU register S1
-	VCVT.U32 R10,S4   @ covert the result to double precision for printing
+	BL  _scanfINT              @ branch to scanf procedure with return
+	MOV R10, R0             @ move return value R0 to FPU register S1
+	@VCVT.U32 R10,S4   @ covert the result to double precision for printing
 	@VMOV S4, R10
 	@SUB R10, R10, #1
 	MOV R0, #1              @ initialze index variable
@@ -117,6 +127,7 @@ _printf_result:
 format_str: 	.asciz	    "%f"
 read_char:      .ascii      " "
 result_str:	.asciz	   "%f \n"
+format_strINT:		.asciz		"%d"
 
 
 
